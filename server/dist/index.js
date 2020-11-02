@@ -9,6 +9,48 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "./src/app.ts":
+/*!********************!*\
+  !*** ./src/app.ts ***!
+  \********************/
+/*! unknown exports (runtime-defined) */
+/*! runtime requirements: top-level-this-exports, __webpack_exports__, __webpack_require__ */
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+eval("\nvar __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {\n    if (k2 === undefined) k2 = k;\n    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });\n}) : (function(o, m, k, k2) {\n    if (k2 === undefined) k2 = k;\n    o[k2] = m[k];\n}));\nvar __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {\n    Object.defineProperty(o, \"default\", { enumerable: true, value: v });\n}) : function(o, v) {\n    o[\"default\"] = v;\n});\nvar __importStar = (this && this.__importStar) || function (mod) {\n    if (mod && mod.__esModule) return mod;\n    var result = {};\n    if (mod != null) for (var k in mod) if (k !== \"default\" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);\n    __setModuleDefault(result, mod);\n    return result;\n};\nvar __importDefault = (this && this.__importDefault) || function (mod) {\n    return (mod && mod.__esModule) ? mod : { \"default\": mod };\n};\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\n/**\n * Required External Modules\n */\nvar dotenv = __importStar(__webpack_require__(/*! dotenv */ \"dotenv\"));\nvar express_1 = __importDefault(__webpack_require__(/*! express */ \"express\"));\nvar cors_1 = __importDefault(__webpack_require__(/*! cors */ \"cors\"));\nvar helmet_1 = __importDefault(__webpack_require__(/*! helmet */ \"helmet\"));\nvar users_router_1 = __webpack_require__(/*! ./modules/user/users.router */ \"./src/modules/user/users.router.ts\");\nvar error_middleware_1 = __webpack_require__(/*! ./middleware/error.middleware */ \"./src/middleware/error.middleware.ts\");\nvar notFound_middleware_1 = __webpack_require__(/*! ./middleware/notFound.middleware */ \"./src/middleware/notFound.middleware.ts\");\ndotenv.config();\n/**\n * App Variables\n */\nif (!process.env.PORT) {\n    console.error('No port specified, exiting app');\n    process.exit(1);\n}\nvar app = express_1.default();\n/**\n *  App Configuration\n */\napp.use(helmet_1.default());\napp.use(cors_1.default());\napp.use(express_1.default.json());\n// Routes\napp.use(\"/users\", users_router_1.usersRouter);\n// Error handlers\napp.use(error_middleware_1.errorHandler);\napp.use(notFound_middleware_1.notFoundHandler);\nexports.default = app;\n\n\n//# sourceURL=webpack://server/./src/app.ts?");
+
+/***/ }),
+
+/***/ "./src/config.ts":
+/*!***********************!*\
+  !*** ./src/config.ts ***!
+  \***********************/
+/*! flagged exports */
+/*! export __esModule [provided] [no usage info] [missing usage info prevents renaming] */
+/*! export dbConnectionOptions [provided] [no usage info] [missing usage info prevents renaming] */
+/*! other exports [not provided] [no usage info] */
+/*! runtime requirements: __webpack_exports__, __webpack_require__ */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+eval("\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nexports.dbConnectionOptions = void 0;\nvar user_entity_1 = __webpack_require__(/*! ./entity/user.entity */ \"./src/entity/user.entity.ts\");\nexports.dbConnectionOptions = {\n    type: 'sqlite',\n    //  host: 'localhost',\n    //  port: 3306,\n    //  username: 'root',\n    //  password: 'admin',\n    database: './db.sqlite',\n    entities: [\n        user_entity_1.User,\n    ],\n    synchronize: true,\n    logging: false\n};\n\n\n//# sourceURL=webpack://server/./src/config.ts?");
+
+/***/ }),
+
+/***/ "./src/entity/user.entity.ts":
+/*!***********************************!*\
+  !*** ./src/entity/user.entity.ts ***!
+  \***********************************/
+/*! unknown exports (runtime-defined) */
+/*! runtime requirements: top-level-this-exports, __webpack_exports__, __webpack_require__ */
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+eval("\nvar __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {\n    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;\n    if (typeof Reflect === \"object\" && typeof Reflect.decorate === \"function\") r = Reflect.decorate(decorators, target, key, desc);\n    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;\n    return c > 3 && r && Object.defineProperty(target, key, r), r;\n};\nvar __metadata = (this && this.__metadata) || function (k, v) {\n    if (typeof Reflect === \"object\" && typeof Reflect.metadata === \"function\") return Reflect.metadata(k, v);\n};\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nexports.User = exports.Role = void 0;\nvar typeorm_1 = __webpack_require__(/*! typeorm */ \"typeorm\");\nvar Role;\n(function (Role) {\n    Role[\"JOB_CREATOR\"] = \"JOB_CREATOR\";\n    Role[\"JOB_SEEKER\"] = \"JOB_SEEKER\";\n})(Role = exports.Role || (exports.Role = {}));\nvar User = /** @class */ (function () {\n    function User() {\n    }\n    __decorate([\n        typeorm_1.PrimaryGeneratedColumn(),\n        __metadata(\"design:type\", Number)\n    ], User.prototype, \"id\", void 0);\n    __decorate([\n        typeorm_1.Column(),\n        __metadata(\"design:type\", String)\n    ], User.prototype, \"name\", void 0);\n    __decorate([\n        typeorm_1.Column(),\n        __metadata(\"design:type\", String)\n    ], User.prototype, \"email\", void 0);\n    __decorate([\n        typeorm_1.Column(),\n        __metadata(\"design:type\", String)\n    ], User.prototype, \"password\", void 0);\n    __decorate([\n        typeorm_1.Column(),\n        __metadata(\"design:type\", String)\n    ], User.prototype, \"role\", void 0);\n    User = __decorate([\n        typeorm_1.Entity()\n    ], User);\n    return User;\n}());\nexports.User = User;\n\n\n//# sourceURL=webpack://server/./src/entity/user.entity.ts?");
+
+/***/ }),
+
 /***/ "./src/index.ts":
 /*!**********************!*\
   !*** ./src/index.ts ***!
@@ -16,13 +58,42 @@
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: top-level-this-exports, __webpack_exports__, __webpack_require__, module */
 /*! CommonJS bailout: this is used directly at 2:23-27 */
-/*! CommonJS bailout: this is used directly at 9:26-30 */
-/*! CommonJS bailout: this is used directly at 14:20-24 */
-/*! CommonJS bailout: this is used directly at 21:23-27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("\nvar __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {\n    if (k2 === undefined) k2 = k;\n    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });\n}) : (function(o, m, k, k2) {\n    if (k2 === undefined) k2 = k;\n    o[k2] = m[k];\n}));\nvar __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {\n    Object.defineProperty(o, \"default\", { enumerable: true, value: v });\n}) : function(o, v) {\n    o[\"default\"] = v;\n});\nvar __importStar = (this && this.__importStar) || function (mod) {\n    if (mod && mod.__esModule) return mod;\n    var result = {};\n    if (mod != null) for (var k in mod) if (k !== \"default\" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);\n    __setModuleDefault(result, mod);\n    return result;\n};\nvar __importDefault = (this && this.__importDefault) || function (mod) {\n    return (mod && mod.__esModule) ? mod : { \"default\": mod };\n};\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\n/**\n * Required External Modules\n */\nvar dotenv = __importStar(__webpack_require__(/*! dotenv */ \"dotenv\"));\nvar express_1 = __importDefault(__webpack_require__(/*! express */ \"express\"));\nvar cors_1 = __importDefault(__webpack_require__(/*! cors */ \"cors\"));\nvar helmet_1 = __importDefault(__webpack_require__(/*! helmet */ \"helmet\"));\nvar users_router_1 = __webpack_require__(/*! ./modules/user/users.router */ \"./src/modules/user/users.router.ts\");\ndotenv.config();\n/**\n * App Variables\n */\nif (!process.env.PORT) {\n    console.error('No port specified, exiting app');\n    process.exit(1);\n}\nvar PORT = parseInt(process.env.PORT, 10);\nvar app = express_1.default();\n/**\n *  App Configuration\n */\napp.use(helmet_1.default());\napp.use(cors_1.default());\napp.use(express_1.default.json());\napp.use(\"/users\", users_router_1.usersRouter);\n/**\n * Server Activation\n */\nvar server = app.listen(PORT, function () {\n    console.log(\"Listening on port \" + PORT);\n});\nif (true) {\n    module.hot.accept();\n    module.hot.dispose(function () { return server.close(); });\n}\n\n\n//# sourceURL=webpack://server/./src/index.ts?");
+eval("\nvar __importDefault = (this && this.__importDefault) || function (mod) {\n    return (mod && mod.__esModule) ? mod : { \"default\": mod };\n};\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\n__webpack_require__(/*! reflect-metadata */ \"reflect-metadata\");\nvar typeorm_1 = __webpack_require__(/*! typeorm */ \"typeorm\");\nvar app_1 = __importDefault(__webpack_require__(/*! ./app */ \"./src/app.ts\"));\nvar config_1 = __webpack_require__(/*! ./config */ \"./src/config.ts\");\ntypeorm_1.createConnection(config_1.dbConnectionOptions).then(function (connection) {\n    /**\n    * Server Activation\n    */\n    var PORT = parseInt(process.env.PORT, 10);\n    var server = app_1.default.listen(PORT, function () {\n        console.log(\"Listening on port \" + PORT);\n    });\n    /**\n     * Webpack HMR Activation\n     */\n    if (true) {\n        module.hot.accept();\n        module.hot.dispose(function () { return server.close(); });\n    }\n}).catch(function (error) { return console.log(error); });\n\n\n//# sourceURL=webpack://server/./src/index.ts?");
+
+/***/ }),
+
+/***/ "./src/middleware/error.middleware.ts":
+/*!********************************************!*\
+  !*** ./src/middleware/error.middleware.ts ***!
+  \********************************************/
+/*! flagged exports */
+/*! export __esModule [provided] [no usage info] [missing usage info prevents renaming] */
+/*! export errorHandler [provided] [no usage info] [missing usage info prevents renaming] */
+/*! other exports [not provided] [no usage info] */
+/*! runtime requirements: __webpack_exports__ */
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+eval("\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nexports.errorHandler = void 0;\nexports.errorHandler = function (error, request, response, next) {\n    var status = error.statusCode || 500;\n    var message = error.message || 'We are having some problems.';\n    response.status(status).send(message);\n};\n\n\n//# sourceURL=webpack://server/./src/middleware/error.middleware.ts?");
+
+/***/ }),
+
+/***/ "./src/middleware/notFound.middleware.ts":
+/*!***********************************************!*\
+  !*** ./src/middleware/notFound.middleware.ts ***!
+  \***********************************************/
+/*! flagged exports */
+/*! export __esModule [provided] [no usage info] [missing usage info prevents renaming] */
+/*! export notFoundHandler [provided] [no usage info] [missing usage info prevents renaming] */
+/*! other exports [not provided] [no usage info] */
+/*! runtime requirements: __webpack_exports__ */
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+eval("\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nexports.notFoundHandler = void 0;\nexports.notFoundHandler = function (request, response, next) {\n    response.status(404).send('Resource not found');\n};\n\n\n//# sourceURL=webpack://server/./src/middleware/notFound.middleware.ts?");
 
 /***/ }),
 
@@ -48,13 +119,6 @@ eval("\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nexpo
   \******************************************/
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: top-level-this-exports, __webpack_exports__, __webpack_require__ */
-/*! CommonJS bailout: this is used directly at 2:16-20 */
-/*! CommonJS bailout: this is used directly at 13:23-27 */
-/*! CommonJS bailout: this is used directly at 20:26-30 */
-/*! CommonJS bailout: this is used directly at 25:20-24 */
-/*! CommonJS bailout: this is used directly at 32:17-21 */
-/*! CommonJS bailout: this is used directly at 41:19-23 */
-/*! CommonJS bailout: this is used directly at 68:23-27 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -68,9 +132,6 @@ eval("\nvar __assign = (this && this.__assign) || function () {\n    __assign = 
   \*******************************************/
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: top-level-this-exports, __webpack_exports__, __webpack_require__ */
-/*! CommonJS bailout: this is used directly at 2:16-20 */
-/*! CommonJS bailout: this is used directly at 13:17-21 */
-/*! CommonJS bailout: this is used directly at 22:19-23 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -84,7 +145,6 @@ eval("\nvar __assign = (this && this.__assign) || function () {\n    __assign = 
   \******************************************************/
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: module, __webpack_require__ */
-/*! CommonJS bailout: module.exports is used directly at 5:0-14 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 eval("/*\n\tMIT License http://www.opensource.org/licenses/mit-license.php\n\tAuthor Tobias Koppers @sokra\n*/\nmodule.exports = function (updatedModules, renewedModules) {\n\tvar unacceptedModules = updatedModules.filter(function (moduleId) {\n\t\treturn renewedModules && renewedModules.indexOf(moduleId) < 0;\n\t});\n\tvar log = __webpack_require__(/*! ./log */ \"./node_modules/webpack/hot/log.js\");\n\n\tif (unacceptedModules.length > 0) {\n\t\tlog(\n\t\t\t\"warning\",\n\t\t\t\"[HMR] The following modules couldn't be hot updated: (They would need a full reload!)\"\n\t\t);\n\t\tunacceptedModules.forEach(function (moduleId) {\n\t\t\tlog(\"warning\", \"[HMR]  - \" + moduleId);\n\t\t});\n\t}\n\n\tif (!renewedModules || renewedModules.length === 0) {\n\t\tlog(\"info\", \"[HMR] Nothing hot updated.\");\n\t} else {\n\t\tlog(\"info\", \"[HMR] Updated modules:\");\n\t\trenewedModules.forEach(function (moduleId) {\n\t\t\tif (typeof moduleId === \"string\" && moduleId.indexOf(\"!\") !== -1) {\n\t\t\t\tvar parts = moduleId.split(\"!\");\n\t\t\t\tlog.groupCollapsed(\"info\", \"[HMR]  - \" + parts.pop());\n\t\t\t\tlog(\"info\", \"[HMR]  - \" + moduleId);\n\t\t\t\tlog.groupEnd(\"info\");\n\t\t\t} else {\n\t\t\t\tlog(\"info\", \"[HMR]  - \" + moduleId);\n\t\t\t}\n\t\t});\n\t\tvar numberIds = renewedModules.every(function (moduleId) {\n\t\t\treturn typeof moduleId === \"number\";\n\t\t});\n\t\tif (numberIds)\n\t\t\tlog(\n\t\t\t\t\"info\",\n\t\t\t\t'[HMR] Consider using the optimization.moduleIds: \"named\" for module names.'\n\t\t\t);\n\t}\n};\n\n\n//# sourceURL=webpack://server/./node_modules/webpack/hot/log-apply-result.js?");
@@ -97,7 +157,6 @@ eval("/*\n\tMIT License http://www.opensource.org/licenses/mit-license.php\n\tAu
   \*****************************************/
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements: module */
-/*! CommonJS bailout: module.exports is used directly at 21:0-14 */
 /***/ ((module) => {
 
 eval("var logLevel = \"info\";\n\nfunction dummy() {}\n\nfunction shouldLog(level) {\n\tvar shouldLog =\n\t\t(logLevel === \"info\" && level === \"info\") ||\n\t\t([\"info\", \"warning\"].indexOf(logLevel) >= 0 && level === \"warning\") ||\n\t\t([\"info\", \"warning\", \"error\"].indexOf(logLevel) >= 0 && level === \"error\");\n\treturn shouldLog;\n}\n\nfunction logGroup(logFn) {\n\treturn function (level, msg) {\n\t\tif (shouldLog(level)) {\n\t\t\tlogFn(msg);\n\t\t}\n\t};\n}\n\nmodule.exports = function (level, msg) {\n\tif (shouldLog(level)) {\n\t\tif (level === \"info\") {\n\t\t\tconsole.log(msg);\n\t\t} else if (level === \"warning\") {\n\t\t\tconsole.warn(msg);\n\t\t} else if (level === \"error\") {\n\t\t\tconsole.error(msg);\n\t\t}\n\t}\n};\n\n/* eslint-disable node/no-unsupported-features/node-builtins */\nvar group = console.group || dummy;\nvar groupCollapsed = console.groupCollapsed || dummy;\nvar groupEnd = console.groupEnd || dummy;\n/* eslint-enable node/no-unsupported-features/node-builtins */\n\nmodule.exports.group = logGroup(group);\n\nmodule.exports.groupCollapsed = logGroup(groupCollapsed);\n\nmodule.exports.groupEnd = logGroup(groupEnd);\n\nmodule.exports.setLogLevel = function (level) {\n\tlogLevel = level;\n};\n\nmodule.exports.formatError = function (err) {\n\tvar message = err.message;\n\tvar stack = err.stack;\n\tif (!stack) {\n\t\treturn message;\n\t} else if (stack.indexOf(message) < 0) {\n\t\treturn message + \"\\n\" + stack;\n\t} else {\n\t\treturn stack;\n\t}\n};\n\n\n//# sourceURL=webpack://server/./node_modules/webpack/hot/log.js?");
@@ -170,6 +229,34 @@ eval("module.exports = require(\"express\");;\n\n//# sourceURL=webpack://server/
 "use strict";
 eval("module.exports = require(\"helmet\");;\n\n//# sourceURL=webpack://server/external_%22helmet%22?");
 
+/***/ }),
+
+/***/ "reflect-metadata":
+/*!***********************************!*\
+  !*** external "reflect-metadata" ***!
+  \***********************************/
+/*! dynamic exports */
+/*! exports [maybe provided (runtime-defined)] [no usage info] */
+/*! runtime requirements: module */
+/***/ ((module) => {
+
+"use strict";
+eval("module.exports = require(\"reflect-metadata\");;\n\n//# sourceURL=webpack://server/external_%22reflect-metadata%22?");
+
+/***/ }),
+
+/***/ "typeorm":
+/*!**************************!*\
+  !*** external "typeorm" ***!
+  \**************************/
+/*! dynamic exports */
+/*! exports [maybe provided (runtime-defined)] [no usage info] */
+/*! runtime requirements: module */
+/***/ ((module) => {
+
+"use strict";
+eval("module.exports = require(\"typeorm\");;\n\n//# sourceURL=webpack://server/external_%22typeorm%22?");
+
 /***/ })
 
 /******/ 	});
@@ -226,7 +313,7 @@ eval("module.exports = require(\"helmet\");;\n\n//# sourceURL=webpack://server/e
 /******/ 	
 /******/ 	/* webpack/runtime/getFullHash */
 /******/ 	(() => {
-/******/ 		__webpack_require__.h = () => "fe92ad59a4baac16eac9"
+/******/ 		__webpack_require__.h = () => "acd92c24cb636ce802f2"
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */

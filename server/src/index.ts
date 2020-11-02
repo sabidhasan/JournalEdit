@@ -1,43 +1,9 @@
-/**
- * Required External Modules
- */
-import * as dotenv from 'dotenv';
-import express from 'express';
-import cors from 'cors';
-import helmet from 'helmet';
-import { usersRouter } from './modules/user/users.router';
+import 'reflect-metadata';
+import { createConnection } from 'typeorm';
+import app from './app';
+import { dbConnectionOptions } from './config';
 
-dotenv.config();
-
-/**
- * App Variables
- */
-if (!process.env.PORT) {
-  console.error('No port specified, exiting app');
-  process.exit(1);
-}
-
-const PORT: number = parseInt(process.env.PORT as string, 10);
-const app = express();
-
-/**
- *  App Configuration
- */
-app.use(helmet());
-app.use(cors());
-app.use(express.json());
-app.use("/users", usersRouter);
-
-/**
- * Server Activation
- */
-const server = app.listen(PORT, () => {
-  console.log(`Listening on port ${PORT}`);
-});
-
-/**
- * Webpack HMR Activation
- */
+// Declare WebpackHotModule for auto-restart typing
 type ModuleId = string | number;
 
 interface WebpackHotModule {
@@ -55,7 +21,22 @@ interface WebpackHotModule {
 
 declare const module: WebpackHotModule;
 
-if (module.hot) {
-  module.hot.accept();
-  module.hot.dispose(() => server.close());
-}
+createConnection(dbConnectionOptions).then(connection => {
+  /**
+  * Server Activation
+  */
+  const PORT: number = parseInt(process.env.PORT as string, 10);
+
+  const server = app.listen(PORT, () => {
+    console.log(`Listening on port ${PORT}`);
+  });
+
+  /**
+   * Webpack HMR Activation
+   */
+  if (module.hot) {
+    module.hot.accept();
+    module.hot.dispose(() => server.close());
+  }
+
+}).catch(error => console.log(error));
