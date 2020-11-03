@@ -1,0 +1,27 @@
+General scaffolding: https://auth0.com/blog/use-typescript-to-create-a-secure-api-with-nodejs-and-express-getting-started/#Bootstrap-a-Node-js--Express--and-TypeScript-Project
+
+ORM: https://github.com/typeorm/typeorm/blob/master/docs/one-to-one-relations.md + https://typeorm.io/
+
+Authentication: https://medium.com/front-end-weekly/learn-using-jwt-with-passport-authentication-9761539c4314
+
+
+todo:
+  - footer
+  - login / signup
+  - create jobs
+  - file upload
+  - approve job-seekers
+  -
+
+
+Backend
+  * authentication (JWT)
+  - class validator
+  - create user job-owner
+
+  - create jobs
+  - upload file
+  - create user job-seeker
+  - apply to jobs
+  - job-owner sees/approves applications
+  - allow comments
