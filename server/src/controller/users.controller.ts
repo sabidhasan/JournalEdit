@@ -2,9 +2,7 @@
  * Required External Modules and Interfaces
  */
 import express, { Request, Response } from 'express';
-import * as UserService from './users.service';
-import { User } from './user.interface';
-import { Users } from './users.interface';
+import * as UserService from '../service/users.service';
 
 /**
  * Router Definition
