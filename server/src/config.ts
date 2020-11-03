@@ -19,3 +19,6 @@ export const dbConnectionOptions: ConnectionOptions = {
   synchronize: true,
   logging: true,
 };
+
+export const JWT_EXPIRATION_MS = 120_000;
+export const HASH_COST = 10;

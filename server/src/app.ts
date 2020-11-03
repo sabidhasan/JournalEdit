@@ -5,9 +5,12 @@ import * as dotenv from 'dotenv';
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
-import { usersRouter } from './controller/users.controller';
+import { authController } from './controller/auth.controller';
 import { errorHandler } from './middleware/error.middleware';
 import { notFoundHandler } from './middleware/notFound.middleware';
+import './common/auth';
+
+import passport from 'passport';
 
 dotenv.config();
 
@@ -16,6 +19,11 @@ dotenv.config();
  */
 if (!process.env.PORT) {
   console.error('No port specified, exiting app');
+  process.exit(1);
+}
+
+if (!process.env.JWT_SECRET) {
+  console.error('No JWT secret specified, exiting app');
   process.exit(1);
 }
 
@@ -29,10 +37,10 @@ app.use(cors());
 app.use(express.json());
 
 // Routes
-app.use("/users", usersRouter);
+app.use('/auth', authController);
 
 // Error handlers
-app.use(errorHandler);
+// app.use(errorHandler);
 app.use(notFoundHandler);
 
 export default app;
