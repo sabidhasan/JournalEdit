@@ -1,9 +1,5 @@
-import { Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  ManyToOne,
-  OneToMany,
-} from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany } from 'typeorm';
+import { IsString, IsOptional, IsInt, IsPositive } from 'class-validator';
 import { User } from './user.entity';
 import { Comment } from './comment.entity';
 import { JobApplication } from './jobapplication.entity';
@@ -14,21 +10,26 @@ export class Job {
   id!: number;
 
   @Column()
+  @IsString()
   name!: string;
 
-  @Column()
-  email!: string;
-
   @Column('text')
+  @IsString()
   description!: string;
 
   @Column()
-  journal!: string;
+  @IsString()
+  @IsOptional()
+  journal?: string;
 
   @Column()
-  language!: string;
+  @IsString()
+  @IsOptional()
+  language?: string;
 
   @Column()
+  @IsInt()
+  @IsPositive()
   pay!: number;
 
   @OneToMany(() => Comment, (comment) => comment.job)

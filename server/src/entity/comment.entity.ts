@@ -1,8 +1,5 @@
-import { Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  ManyToOne
-} from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { IsString } from 'class-validator';
 import { Job } from './job.entity';
 import { User } from './user.entity';
 
@@ -12,6 +9,7 @@ export class Comment {
   id!: number;
 
   @Column('text')
+  @IsString()
   text!: string;
 
   @ManyToOne(() => Job, job => job.comments)

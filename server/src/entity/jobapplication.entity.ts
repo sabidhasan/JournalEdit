@@ -1,8 +1,5 @@
-import { Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  ManyToOne,
-} from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { IsBoolean, IsString } from 'class-validator';
 import { Job } from './job.entity';
 import { User } from './user.entity';
 
@@ -12,9 +9,11 @@ export class JobApplication {
   id!: number;
 
   @Column()
+  @IsBoolean()
   approved!: boolean;
   
   @Column()
+  @IsString()
   text!: string;
 
   @ManyToOne(() => Job, job => job.applications)
