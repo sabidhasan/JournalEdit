@@ -1,7 +1,7 @@
 import { getRepository, getManager } from 'typeorm';
 import { User } from '../entity/user.entity';
 
-export const findByEmail = async (email: string): Promise<User | undefined> => {
+export const findUserByEmail = async (email: string): Promise<User | undefined> => {
   const entityManager = getManager();
   return await entityManager.findOne(User, { where: { email, } });
 };

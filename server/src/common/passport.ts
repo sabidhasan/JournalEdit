@@ -20,7 +20,6 @@ const localStrategyOptions = {
 };
 
 const localStrategy = new LocalStrategy(localStrategyOptions, async (email, password, done) => {
-  console.log('0')
   const user = await findUserByEmail(email);
   let passwordsMatch = false;
 
@@ -29,10 +28,8 @@ const localStrategy = new LocalStrategy(localStrategyOptions, async (email, pass
   }
 
   if (passwordsMatch) {
-    console.log('1')
     return done(null, user);
   } else {
-    console.log('2')
     return done('AUTH_ERROR_INVALID_CREDENTIALS', null);
   }
 });

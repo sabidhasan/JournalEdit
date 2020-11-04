@@ -1,7 +1,7 @@
 /**
  * Required External Modules and Interfaces
  */
-import express from 'express';
+import express, { RequestHandler } from 'express';
 import bcrypt from 'bcrypt';
 import passport from 'passport';
 import jsonwebtoken from 'jsonwebtoken';
@@ -16,11 +16,10 @@ import { JWT_EXPIRATION_MS, HASH_COST } from '../config';
 export const authController = express.Router();
 
 /**
- * Controller Definitions
+ * Controller methods
  */
-authController.post('/', async (req, res) => {
+const handleRegister: RequestHandler = async (req, res) => {
   // Register
-  // TODO: validate body
   try {
     const newUser = new User();
     newUser.country = req.body.country;
@@ -34,19 +33,19 @@ authController.post('/', async (req, res) => {
     if (validationErrors.length) {
       throw new Error('Invalid schema for user');
     }
- 
+
     await authService.createUser(newUser);
     res.status(200).send({ email: newUser.email });
   } catch (error) {
     res.status(400).send({ error: error.message });
   }
-});
+};
 
-authController.post('/login', (req, res) => {
+const handleLogin: RequestHandler = (req, res) => {
   // Login
   passport.authenticate('local', { session: false }, (error, user: User) => {
     if (error || !user) {
-      res.status(400).json({ error });
+      return res.status(400).json({ error: error || 'AUTH_ERROR_INVALID_CREDENTIALS' });
     }
 
     /** This is what ends up in our JWT */
@@ -63,7 +62,15 @@ authController.post('/login', (req, res) => {
 
       /** generate a signed json web token and return it in the response */
       const token = jsonwebtoken.sign(JSON.stringify(payload), process.env.JWT_SECRET as string);
-      res.status(200).send({ username: user.email, token, });
+      res.cookie('jwt', token, { path: '*', httpOnly: true });
+      res.status(200).send({ username: user.email, });
     });
   })(req, res);
-});
+};
+
+/**
+ * Controller routes
+ */
+authController.post('/', handleRegister);
+authController.post('/login', handleLogin);
+
