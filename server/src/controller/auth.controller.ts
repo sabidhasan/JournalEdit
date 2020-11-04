@@ -9,6 +9,7 @@ import { validate } from 'class-validator';
 import * as authService from '../service/auth.service';
 import { User } from '../entity/user.entity';
 import { JWT_EXPIRATION_MS, HASH_COST } from '../config';
+import { AUTH_INVALID_CREDENTIALS, INVALID_USER_SCHEMA } from '../common/responseErrors';
 
 /**
  * Router Definition
@@ -31,7 +32,7 @@ const handleRegister: RequestHandler = async (req, res) => {
 
     const validationErrors = await validate(newUser);
     if (validationErrors.length) {
-      throw new Error('Invalid schema for user');
+      throw new Error(INVALID_USER_SCHEMA);
     }
 
     await authService.createUser(newUser);
@@ -45,7 +46,7 @@ const handleLogin: RequestHandler = (req, res) => {
   // Login
   passport.authenticate('local', { session: false }, (error, user: User) => {
     if (error || !user) {
-      return res.status(400).json({ error: error || 'AUTH_ERROR_INVALID_CREDENTIALS' });
+      return res.status(400).json({ error: error || AUTH_INVALID_CREDENTIALS });
     }
 
     /** This is what ends up in our JWT */

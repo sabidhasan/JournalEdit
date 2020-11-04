@@ -10,9 +10,10 @@ import {
 } from 'passport-jwt';
 import bcrypt from 'bcrypt';
 import { findUserByEmail } from '../service/auth.service';
+import { AUTH_INVALID_CREDENTIALS, AUTH_TOKEN_EXPIRED } from '../common/responseErrors';
 
 /**
- * Passport strategy for reading JWT from 
+ * Passport strategy for reading JWT from body of request
  */
 const localStrategyOptions = {
   usernameField: 'email',
@@ -30,7 +31,7 @@ const localStrategy = new LocalStrategy(localStrategyOptions, async (email, pass
   if (passwordsMatch) {
     return done(null, user);
   } else {
-    return done('AUTH_ERROR_INVALID_CREDENTIALS', null);
+    return done(AUTH_INVALID_CREDENTIALS, null);
   }
 });
 
@@ -46,7 +47,7 @@ const jwtStrategyOptions: JWTStrategyOptions = {
 
 const jwtStrategy = new JWTStrategy(jwtStrategyOptions, (jwtPayload, done) => {
   if (Date.now() > jwtPayload.expires) {
-    return done('AUTH_ERROR_TOKEN_EXPIRED', null);
+    return done(AUTH_TOKEN_EXPIRED, null);
   }
 
   return done(null, jwtPayload);

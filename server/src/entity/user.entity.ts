@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany, Unique } from 'typeorm';
-import { IsString, IsEmail, } from 'class-validator';
+import { IsString, IsEmail, IsEnum, } from 'class-validator';
 import { Job } from './job.entity';
 import { Comment } from './comment.entity';
 import { JobApplication } from './jobapplication.entity';
@@ -36,6 +36,7 @@ export class User {
   country!: string;
 
   @Column()
+  @IsEnum(Role)
   role!: Role;
 
   @OneToMany(() => Job, (job) => job.owner)
