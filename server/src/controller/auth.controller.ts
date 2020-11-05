@@ -17,6 +17,20 @@ import { AUTH_INVALID_CREDENTIALS, INVALID_USER_SCHEMA } from '../common/respons
 export const authController = express.Router();
 
 /**
+ * Helper methods
+ */
+
+export interface IJWTPayload {
+  email: string;
+  expires: number;
+}
+
+const generatePayload: (user: User) => IJWTPayload = (user) => ({
+  email: user.email,
+  expires: Date.now() + JWT_EXPIRATION_MS,
+});
+
+/**
  * Controller methods
  */
 const handleRegister: RequestHandler = async (req, res) => {
@@ -50,10 +64,7 @@ const handleLogin: RequestHandler = (req, res) => {
     }
 
     /** This is what ends up in our JWT */
-    const payload = {
-      email: user.email,
-      expires: Date.now() + JWT_EXPIRATION_MS,
-    };
+    const payload = generatePayload(user);
 
     /** assigns payload to req.user */
     req.login(payload, { session: false }, (error) => {
