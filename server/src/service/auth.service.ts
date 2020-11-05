@@ -1,6 +1,5 @@
 import { getRepository, getManager } from 'typeorm';
 import { User } from '../entity/user.entity';
-import { DUPLICATE_USER } from '../common/responseErrors';
 
 export const findUserByEmail = async (email: string): Promise<User | undefined> => {
   const entityManager = getManager();
@@ -11,7 +10,7 @@ export const createUser = async (newUser: User): Promise<void> => {
   const userRepository = getRepository(User);
   try {
     await userRepository.save(userRepository.create(newUser));
-  } catch (e) {
-    throw new Error(DUPLICATE_USER);
+  } catch (error) {
+    throw new Error(error);
   }
 };

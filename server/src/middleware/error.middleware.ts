@@ -10,5 +10,5 @@ export const errorHandler = (
   const status = error.statusCode || 500;
   const message = error.message || 'We are having some problems.';
 
-  response.status(status).send(message);
+  response.status(status).json(message);
 };

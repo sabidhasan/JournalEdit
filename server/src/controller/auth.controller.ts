@@ -50,9 +50,10 @@ const handleRegister: RequestHandler = async (req, res) => {
     }
 
     await authService.createUser(newUser);
-    res.status(200).send({ email: newUser.email });
+    res.cookie('jwt', '', { expires: new Date(0), path: '/', httpOnly: true })
+    res.status(200).json({ email: newUser.email });
   } catch (error) {
-    res.status(400).send(error.message);
+    res.status(400).json(error.message);
   }
 };
 
@@ -73,26 +74,26 @@ const handleLogin: RequestHandler = (req, res) => {
     /** assigns payload to req.user */
     req.login(payload, { session: false }, (error) => {
       if (error) {
-        res.status(error.statusCode).send(error.message);
+        res.status(error.statusCode).json(error.message);
       }
 
       /** generate a signed json web token and return it in the response */
       const token = jsonwebtoken.sign(JSON.stringify(payload), process.env.JWT_SECRET as string);
       res.cookie('jwt', token, { path: '/', httpOnly: true });
-      res.status(200).send({ email: user.email, });
+      res.status(200).json({ email: user.email, });
     });
   })(req, res);
 };
 
 const handleLogout: RequestHandler = (_, res) => {
   res.cookie('jwt', '', { expires: new Date(0), path: '/', httpOnly: true })
-  res.status(200).send({});
+  res.status(200).json(null);
 };
 
 const handleSelf: RequestHandler = async (req, res) => {
   // Returns data about logged in user
   const user = await authService.findUserByEmail((req.user as IJWTPayload).email);
-  return res.status(user ? 200 : 401).send(user ? user.toJSON() : null);
+  return res.status(user ? 200 : 401).json(user ? user.toJSON() : null);
 };
 
 /**
