@@ -31,7 +31,7 @@ const localStrategy = new LocalStrategy(localStrategyOptions, async (email, pass
   if (passwordsMatch) {
     return done(null, user);
   } else {
-    return done(AUTH_INVALID_CREDENTIALS, null);
+    return done({ statusCode: 401, message: AUTH_INVALID_CREDENTIALS }, null);
   }
 });
 
@@ -47,7 +47,7 @@ const jwtStrategyOptions: JWTStrategyOptions = {
 
 const jwtStrategy = new JWTStrategy(jwtStrategyOptions, (jwtPayload, done) => {
   if (Date.now() > jwtPayload.expires) {
-    return done(AUTH_TOKEN_EXPIRED, null);
+    return done({ statusCode: 401, message: AUTH_TOKEN_EXPIRED }, null);
   }
 
   return done(null, jwtPayload);

@@ -52,15 +52,19 @@ const handleRegister: RequestHandler = async (req, res) => {
     await authService.createUser(newUser);
     res.status(200).send({ email: newUser.email });
   } catch (error) {
-    res.status(400).send({ error: error.message });
+    res.status(400).send(error.message);
   }
 };
 
 const handleLogin: RequestHandler = (req, res) => {
   // Login
   passport.authenticate('local', { session: false }, (error, user: User) => {
-    if (error || !user) {
-      return res.status(400).json({ error: error || AUTH_INVALID_CREDENTIALS });
+    if (error) {
+      return res.status(error.statusCode).json(error.message);
+    }
+
+    if (!user) {
+      return res.status(401).json(AUTH_INVALID_CREDENTIALS);
     }
 
     /** This is what ends up in our JWT */
@@ -69,7 +73,7 @@ const handleLogin: RequestHandler = (req, res) => {
     /** assigns payload to req.user */
     req.login(payload, { session: false }, (error) => {
       if (error) {
-        res.status(400).send({ error });
+        res.status(error.statusCode).send(error.message);
       }
 
       /** generate a signed json web token and return it in the response */
@@ -80,14 +84,21 @@ const handleLogin: RequestHandler = (req, res) => {
   })(req, res);
 };
 
-const handleLogout: RequestHandler = (req, res) => {
+const handleLogout: RequestHandler = (_, res) => {
   res.cookie('jwt', '', { expires: new Date(0), path: '/', httpOnly: true })
   res.status(200).send({});
+};
+
+const handleSelf: RequestHandler = async (req, res) => {
+  // Returns data about logged in user
+  const user = await authService.findUserByEmail((req.user as IJWTPayload).email);
+  return res.status(user ? 200 : 401).send(user ? user.toJSON() : null);
 };
 
 /**
  * Controller routes
  */
 authController.post('/', handleRegister);
+authController.get('/', passport.authenticate('jwt', { session: false }), handleSelf)
 authController.post('/login', handleLogin);
 authController.post('/logout', handleLogout);

@@ -47,4 +47,15 @@ export class User {
 
   @OneToMany(() => JobApplication, (jobApplication) => jobApplication.applicant)
   jobApplications!: JobApplication[];
+
+  public toJSON() {
+    return {
+      id: this.id,
+      name: this.name,
+      email: this.email,
+      language: this.language,
+      country: this.country,
+      role: this.role,
+    };
+  }
 }
