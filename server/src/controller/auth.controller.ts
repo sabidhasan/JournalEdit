@@ -51,7 +51,7 @@ const handleLogin: RequestHandler = (req, res) => {
 
     /** This is what ends up in our JWT */
     const payload = {
-      username: user.email,
+      email: user.email,
       expires: Date.now() + JWT_EXPIRATION_MS,
     };
 
@@ -63,10 +63,15 @@ const handleLogin: RequestHandler = (req, res) => {
 
       /** generate a signed json web token and return it in the response */
       const token = jsonwebtoken.sign(JSON.stringify(payload), process.env.JWT_SECRET as string);
-      res.cookie('jwt', token, { path: '*', httpOnly: true });
-      res.status(200).send({ username: user.email, });
+      res.cookie('jwt', token, { path: '/', httpOnly: true });
+      res.status(200).send({ email: user.email, });
     });
   })(req, res);
+};
+
+const handleLogout: RequestHandler = (req, res) => {
+  res.cookie('jwt', '', { expires: new Date(0), path: '/', httpOnly: true })
+  res.status(200).send({});
 };
 
 /**
@@ -74,4 +79,4 @@ const handleLogin: RequestHandler = (req, res) => {
  */
 authController.post('/', handleRegister);
 authController.post('/login', handleLogin);
-
+authController.post('/logout', handleLogout);

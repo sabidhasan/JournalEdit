@@ -15,13 +15,35 @@ todo:
 
 
 Backend
-  * authentication (JWT)
-  - class validator
   - create user job-owner
-
-  - create jobs
-  - upload file
   - create user job-seeker
-  - apply to jobs
+
+  * GET "/me" endpoint for account pages
+  * create jobs
+  * apply to jobs
+
+  - upload file
   - job-owner sees/approves applications
   - allow comments
+  - websockets for push notifications
+
+
+
+  // const users: Users = {
+//   0: {
+//     id: 0,
+//     firstName: 'Tacky',
+//     lastName: 'Loonchanta',
+//     email: 'tacky@tacky.com',
+//     password: '5678',
+//     role: Role.JOB_CREATOR,
+//   },
+//   1: {
+//     id: 1,
+//     firstName: 'Abid',
+//     lastName: 'Hasan',
+//     email: 'abid@abid.com',
+//     password: '1234',
+//     role: Role.JOB_SEEKER,
+//   },
+// };
