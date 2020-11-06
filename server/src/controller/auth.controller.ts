@@ -50,7 +50,7 @@ const handleRegister: RequestHandler = async (req, res) => {
     }
 
     await authService.createUser(newUser);
-    res.cookie('jwt', '', { expires: new Date(0), path: '/', httpOnly: true })
+    res.cookie('jwt', '', { expires: new Date(0), path: '/', httpOnly: true });
     res.status(200).json({ email: newUser.email });
   } catch (error) {
     res.status(400).json(error.message);
@@ -61,10 +61,12 @@ const handleLogin: RequestHandler = (req, res) => {
   // Login
   passport.authenticate('local', { session: false }, (error, user: User) => {
     if (error) {
+      res.cookie('jwt', '', { expires: new Date(0), path: '/', httpOnly: true });
       return res.status(error.statusCode).json(error.message);
     }
 
     if (!user) {
+      res.cookie('jwt', '', { expires: new Date(0), path: '/', httpOnly: true });
       return res.status(401).json(AUTH_INVALID_CREDENTIALS);
     }
 
