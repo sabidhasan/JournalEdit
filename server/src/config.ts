@@ -17,8 +17,8 @@ export const dbConnectionOptions: ConnectionOptions = {
     JobApplication,
   ],
   synchronize: true,
-  logging: true,
+  logging: process.env.NODE_ENV === 'development',
 };
 
-export const JWT_EXPIRATION_MS = 120_000;
+export const JWT_EXPIRATION_MS = 1_200_000;
 export const HASH_COST = 10;

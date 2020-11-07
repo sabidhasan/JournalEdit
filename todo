@@ -15,17 +15,16 @@ todo:
 
 
 Backend
-  - create user job-owner
-  - create user job-seeker
+  go thru routes...
+  * change to "src/entity/**/*.ts" in config (https://medium.com/better-programming/typeorm-migrations-explained-fdb4f27cb1b3)
+  * job-owner sees applications
+  * job-owner approves applications
 
-  * GET "/me" endpoint for account pages
-  * create jobs
-  * apply to jobs
+  * allow comments
+  
+  * upload file
 
-  - upload file
-  - job-owner sees/approves applications
-  - allow comments
-  - websockets for push notifications
+  - websockets for push notifications (use TypeORM Subscribers for thi)
 
 
 
