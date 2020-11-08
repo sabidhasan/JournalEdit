@@ -8,7 +8,7 @@ import * as jobService from '../service/job.service';
 import * as authService from '../service/auth.service';
 import { Role } from '../entity/user.entity';
 import { IJWTPayload } from './auth.controller';
-import { INSUFFICIENT_PRIVILEGE, INVALID_JOB_SCHEMA, JOB_NOT_FOUND } from '../common/responseErrors';
+import { INSUFFICIENT_PRIVILEGE, INVALID_JOB_SCHEMA, JOB_NOT_FOUND, DELETE_JOB_FAILED } from '../common/responseErrors';
 import { Job } from '../entity/job.entity';
 
 /**
@@ -21,15 +21,14 @@ export const jobController = express.Router();
  */
 const handleGetJobs: RequestHandler = async (req, res) => {
   const user = await authService.findUserByEmail((req.user as IJWTPayload).email);
-  const jobId = req.params.id;
 
   if (!user || user.role !== Role.JOB_CREATOR) {
     return res.status(401).json(INSUFFICIENT_PRIVILEGE);
   }
 
-  if (jobId) {
+  if (req.params.id) {
     // Return data for single job
-    const job = await jobService.findJobById(Number(jobId), user.id);
+    const job = await jobService.findJobById(Number(req.params.id), user.id);
     return res.status(job ? 200 : 400).json(job || JOB_NOT_FOUND);
   }
 
@@ -62,25 +61,21 @@ const handleCreateJob: RequestHandler = async (req, res) => {
   }
 };
 
-// const handleDeleteJob: RequestHandler = async (req, res) => {
-//   // Delete job if user is JOB_CREATOR role, job exists, and is owned by user
-//   const user = await authService.findUserByEmail((req.user as IJWTPayload).email);
-//   const jobId = req.params.id;
+const handleDeleteJob: RequestHandler = async (req, res) => {
+  // Delete job if user is JOB_CREATOR role, job exists, and is owned by user
+  if (!req.params.id) {
+    return res.status(400).json(JOB_NOT_FOUND);
+  }
 
-//   if (!user || user.role !== Role.JOB_CREATOR) {
-//     return res.status(401).json(INSUFFICIENT_PRIVILEGE);
-//   } else if (!jobId) {
-//     return res.status(400).json(JOB_NOT_FOUND);
-//   }
+  const user = await authService.findUserByEmail((req.user as IJWTPayload).email);
+  if (!user || user.role !== Role.JOB_CREATOR) {
+    return res.status(401).json(INSUFFICIENT_PRIVILEGE);
+  }
 
-//   // Return data for single job
-//   const deletedJob = await jobService.deleteJob(Number(jobId), user.id);
-//   if (deletedJob) {
-//     return res.status(200).json(deletedJob);
-//   }
-
-//   return res.status(400).json(JOB_NOT_FOUND);
-// };
+  // Return data for single job
+  const deletedJob = await jobService.deleteJob(Number(req.params.id), user.id);
+  return res.status(deletedJob ? 200 : 500).json(deletedJob || DELETE_JOB_FAILED);
+};
 
 /**
  * Controller routes
@@ -88,4 +83,4 @@ const handleCreateJob: RequestHandler = async (req, res) => {
 jobController.get('/', passport.authenticate('jwt', { session: false }), handleGetJobs);
 jobController.get('/:id', passport.authenticate('jwt', { session: false }), handleGetJobs);
 jobController.post('/', passport.authenticate('jwt', { session: false }), handleCreateJob);
-// jobController.delete('/', passport.authenticate('jwt', { session: false }), handleDeleteJob);
+jobController.delete('/:id', passport.authenticate('jwt', { session: false }), handleDeleteJob);

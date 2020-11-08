@@ -32,6 +32,9 @@ export class Job {
   @IsPositive()
   pay!: number;
 
+  @Column('boolean', { default: false })
+  deleted: boolean = false;
+
   @OneToMany(() => Comment, (comment) => comment.job)
   comments!: Comment[];
 

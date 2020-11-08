@@ -1,18 +1,13 @@
 import { getRepository, getManager } from 'typeorm';
 import { Job } from '../entity/job.entity';
-import { JobApplication } from '../entity/jobapplication.entity';
 
 export const getJobsForJobCreator = async (ownerId: number): Promise<Job[]> => {
-  const entityManager = getManager();
-  return await entityManager.find(Job, { where: { owner: ownerId, } }) || [];
-};
-
-export const getJobsForJobSeeker = async (applicant: number): Promise<Job[]> => {
-  const entityManager = getManager();
-  return await entityManager.find(JobApplication, {
-    where: { applicant },
-    relations: ['job'],
-  }) as any;
+  return await getManager().find(Job, {
+    where: {
+      owner: ownerId,
+      deleted: false,
+    }
+  });
 };
 
 export const createJob = async (newJob: Job) => {
@@ -24,26 +19,28 @@ export const createJob = async (newJob: Job) => {
   }
 }
 
-export const findJobById = async (jobId?: number) => {
+export const findJobById = async (jobId: number, ownerId?: number) => {
   if (!jobId) {
     return;
   }
 
-  const entityManager = getManager();
-  return await entityManager.findOne(Job, jobId);
-}
+  return await getRepository(Job)
+    .createQueryBuilder('job')
+    .leftJoinAndSelect('job.applications', 'applications')
+    .leftJoinAndSelect('applications.applicant', 'user')
+    .where('job.id = :id', { id: jobId })
+    .andWhere('job.deleted = false')
+    .andWhere(ownerId !== undefined ? 'job.ownerId = :ownerId' : '1=1', { ownerId })
+    .getOne();
+};
 
-export const applyToJob = async (job: Job, application: JobApplication) => {
-  // const jobRepository = getRepository(Job);
-  const jobApplicationRepository = getRepository(JobApplication);
-  console.log(job.applications)
-  application.job = job;
-  // job.applications.push(application);
-
-  try {
-    return await jobApplicationRepository.save(jobApplicationRepository.create(application));
-    // return await jobRepository.save(jobRepository.create(job));
-  } catch (error) {
-    throw new Error(error);
+export const deleteJob = async (jobId: number, ownerId: number) => {
+  const job = await findJobById(jobId, ownerId);
+  if (job) {
+    // Update the job's delete state
+    job.deleted = true;
+    return await getRepository(Job).save(job);
   }
-}
+
+  return false;
+};
