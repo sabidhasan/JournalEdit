@@ -11,6 +11,7 @@ import { jobController } from './controller/job.controller';
 import { errorHandler } from './middleware/error.middleware';
 import { notFoundHandler } from './middleware/notFound.middleware';
 import './common/passport';
+import { jobApplicationController } from './controller/jobapplication.controller';
 
 dotenv.config();
 
@@ -40,6 +41,7 @@ app.use(express.json());
 // Routes
 app.use('/auth', authController);
 app.use('/jobs', jobController);
+app.use('/applications', jobApplicationController);
 
 // Error handlers
 app.use(errorHandler);
