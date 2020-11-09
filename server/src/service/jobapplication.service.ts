@@ -1,14 +1,14 @@
 import { getRepository, getManager, In } from 'typeorm';
 import { JobApplication } from '../entity/jobapplication.entity';
-import { User } from '../entity/user.entity';
-import { getJobsForJobCreator, deleteJob } from './job.service';
-import app from '../app';
+import { getJobsForJobCreator } from './job.service';
 
 export const getApplicationsForSeeker = async (applicant: number): Promise<JobApplication[]> => {
-  return await getManager().find(JobApplication, {
-    where: { applicant },
-    relations: ['job'],
-  });
+  return await getRepository(JobApplication)
+    .createQueryBuilder('jobApplication')
+    .leftJoinAndSelect('jobApplication.job', 'job')
+    .where('jobApplication.applicantId = :applicant', { applicant, })
+    .andWhere('job.deleted = false')
+    .getMany();
 };
 
 export const getApplicationsForCreator = async (ownerId: number): Promise<JobApplication[]> => {
