@@ -11,7 +11,9 @@ import { Role } from '../entity/user.entity';
 import { IJWTPayload } from './auth.controller';
 import {
   INSUFFICIENT_PRIVILEGE,
-  JOB_NOT_FOUND, INVALID_APPLICATION_SCHEMA,
+  JOB_NOT_FOUND,
+  DELETE_FAILED,
+  INVALID_APPLICATION_SCHEMA,
   JOB_APPLICATION_ALREADY_EXISTS,
 } from '../common/responseErrors';
 import { JobApplication } from '../entity/jobapplication.entity';
@@ -71,10 +73,28 @@ const handleCreateApplication: RequestHandler = async (req, res) => {
       throw new Error(INVALID_APPLICATION_SCHEMA);
     }
 
-    return res.status(200).json(await jobApplicationService.applyToJob(application));
+    return res.status(200).json(await jobApplicationService.createJobApplication(application));
   } catch (error) {
     return res.status(400).json(error.message);
   }
+};
+
+const handleDeleteApplication: RequestHandler = async (req, res) => {
+  const user = await authService.findUserByEmail((req.user as IJWTPayload).email);
+
+  if (!user || user.role !== Role.JOB_SEEKER) {
+    return res.status(401).json(INSUFFICIENT_PRIVILEGE);
+  }
+
+  const targetApplication = (await jobApplicationService.getApplicationsForSeeker(user.id))
+    .find(application => application.id === Number(req.params.id));
+
+  if (!targetApplication) {
+    return res.status(404).json(JOB_NOT_FOUND);
+  }
+
+  const deleteJobStatus = await jobApplicationService.deleteJobApplication(targetApplication);
+  return res.status(deleteJobStatus ? 200 : 500).json({ deleted: deleteJobStatus == false ? DELETE_FAILED : true });
 };
 
 /**
@@ -82,3 +102,4 @@ const handleCreateApplication: RequestHandler = async (req, res) => {
  */
 jobApplicationController.get('/', passport.authenticate('jwt', { session: false }), handleGetJobApplications);
 jobApplicationController.post('/', passport.authenticate('jwt', { session: false }), handleCreateApplication);
+jobApplicationController.delete('/:id', passport.authenticate('jwt', { session: false }), handleDeleteApplication);

@@ -8,7 +8,7 @@ import * as jobService from '../service/job.service';
 import * as authService from '../service/auth.service';
 import { Role } from '../entity/user.entity';
 import { IJWTPayload } from './auth.controller';
-import { INSUFFICIENT_PRIVILEGE, INVALID_JOB_SCHEMA, JOB_NOT_FOUND, DELETE_JOB_FAILED } from '../common/responseErrors';
+import { INSUFFICIENT_PRIVILEGE, INVALID_JOB_SCHEMA, JOB_NOT_FOUND, DELETE_FAILED } from '../common/responseErrors';
 import { Job } from '../entity/job.entity';
 
 /**
@@ -74,7 +74,7 @@ const handleDeleteJob: RequestHandler = async (req, res) => {
 
   // Return data for single job
   const deletedJob = await jobService.deleteJob(Number(req.params.id), user.id);
-  return res.status(deletedJob ? 200 : 500).json(deletedJob || DELETE_JOB_FAILED);
+  return res.status(deletedJob ? 200 : 500).json({ deleted: deletedJob === false ? DELETE_FAILED : deletedJob});
 };
 
 /**
