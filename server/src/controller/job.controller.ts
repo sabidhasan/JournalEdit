@@ -80,6 +80,46 @@ const handleDeleteJob: RequestHandler = async (req, res) => {
 /**
  * Controller routes
  */
+
+/**
+ * @api {get} /api/v1/user/:id Request User information
+ * @apiName GetUser
+ * @apiGroup UserAPI
+ *
+ * @apiParam {Number} id Users unique ID.
+ * @apiPermission Authorized users only
+ *
+ * @apiSuccess {Number} id Unique id of the User.
+ * @apiSuccess {String} firstname Firstname of the User.
+ * @apiSuccess {String} lastname  Lastname of the User.
+ * @apiSuccess {Object} address  Address of the user.
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       'id': 1234,
+ *       'firstname': 'John',
+ *       'lastname': 'Doe',
+ *       'address': {'zipCode' : '00100'}
+ *     }
+ *
+ * @apiError UserNotFound 404 The id of the User was not found.
+ * @apiError InvalidAuthentication 403 Authentication failed.
+ *
+ * @apiErrorExample UserNotFound:
+ *     HTTP/1.1 404 Not Found
+ *     {
+ *       'error': 'UserNotFound'
+ *     }
+ * @apiErrorExample Forbidden:
+ *     HTTP/1.1 403 Forbidden
+ *     {
+ *       'error': 'Authorization failed'
+ *     }
+ *
+ * @apiExample {curl} Example usage:
+ *     curl -i http://localhost:3000/api/v1/user/4711
+ */
 jobController.get('/', passport.authenticate('jwt', { session: false }), handleGetJobs);
 jobController.get('/:id', passport.authenticate('jwt', { session: false }), handleGetJobs);
 jobController.post('/', passport.authenticate('jwt', { session: false }), handleCreateJob);
